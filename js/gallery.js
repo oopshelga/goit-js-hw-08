@@ -64,29 +64,11 @@ const images = [
   },
 ];
 
+const galleryList = document.querySelector(".gallery");
 
-// const galleryList = document.querySelector(".gallery");
-
-// const createGalleryItem = images.map(image => {
-//   return `
-//    <li>
-//   <a href="${image.original}">
-//     <img
-//       src="${image.preview}"
-//       data-source="${image.original}"
-//       alt="${image.description}"
-//     />
-//   </a>
-// </li>
-//   `
-// }).join("");
-
-// galleryList.insertAdjacentHTML("beforeend", createGalleryItem);
-
-const galleryContainer = document.querySelector('.gallery');
-
-const galleryItemsMarkup = images.map(({ preview, original, description }) => {
-  return `
+const markup = images
+  .map(
+    ({ preview, original, description }) => `
     <li class="gallery-item">
       <a class="gallery-link" href="${original}">
         <img
@@ -96,9 +78,43 @@ const galleryItemsMarkup = images.map(({ preview, original, description }) => {
           alt="${description}"
         />
       </a>
-    </li>
-  `;
-}).join('');
+    </li>`
+  )
+  .join("");
 
-galleryContainer.insertAdjacentHTML('beforeend', galleryItemsMarkup);
- 
+galleryList.insertAdjacentHTML("beforeend", markup);
+
+
+galleryList.addEventListener("click", galleryClicked);
+
+
+let modalInstance = null;
+
+function galleryClicked(event) {
+  event.preventDefault();
+
+  const target = event.target;
+  if (target.nodeName !== "IMG") {
+    return;
+  }
+
+  const originalImage = target.dataset.source;
+
+  modalInstance = basicLightbox.create(`
+    <img src="${originalImage}"/>
+  `);
+
+  modalInstance.show();
+
+  // Додаємо слухача для клавіші "Escape"
+  document.addEventListener("keydown", onEscapePress);
+}
+
+// Функція для закриття модального вікна при натисканні "Escape"
+function onEscapePress(event) {
+  if (event.code === "Escape" && modalInstance) {
+    modalInstance.close();
+    // Знімаємо слухача для клавіші "Escape", оскільки вікно закрите
+    document.removeEventListener("keydown", onEscapePress);
+  }
+}
