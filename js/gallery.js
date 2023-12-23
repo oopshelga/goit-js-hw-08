@@ -88,7 +88,7 @@ galleryList.insertAdjacentHTML("beforeend", markup);
 galleryList.addEventListener("click", galleryClicked);
 
 
-let modalInstance = null;
+let modalWindow = null;
 
 function galleryClicked(event) {
   event.preventDefault();
@@ -100,21 +100,19 @@ function galleryClicked(event) {
 
   const originalImage = target.dataset.source;
 
-  modalInstance = basicLightbox.create(`
+  modalWindow = basicLightbox.create(`
     <img src="${originalImage}"/>
   `);
 
-  modalInstance.show();
+  modalWindow.show();
 
-  // Додаємо слухача для клавіші "Escape"
-  document.addEventListener("keydown", onEscapePress);
+
+  document.addEventListener("keydown", escapePressed);
 }
 
-// Функція для закриття модального вікна при натисканні "Escape"
-function onEscapePress(event) {
-  if (event.code === "Escape" && modalInstance) {
-    modalInstance.close();
-    // Знімаємо слухача для клавіші "Escape", оскільки вікно закрите
-    document.removeEventListener("keydown", onEscapePress);
+function escapePressed(event) {
+  if (event.code === "Escape" &&  modalWindow) {
+     modalWindow.close();
+    document.removeEventListener("keydown", escapePressed);
   }
 }
