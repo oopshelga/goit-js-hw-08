@@ -101,18 +101,33 @@ function galleryClicked(event) {
   const originalImage = target.dataset.source;
 
   modalWindow = basicLightbox.create(`
-    <img src="${originalImage}"/>
-  `);
+    <img src="${originalImage}" />
+  `, {
+    onShow: () => {
+      document.addEventListener("keydown", escapePressed);
+    },
+    onClose: () => {
+      document.removeEventListener("keydown", escapePressed);
+    },
+  });
 
   modalWindow.show();
-
-
-  document.addEventListener("keydown", escapePressed);
 }
 
 function escapePressed(event) {
-  if (event.code === "Escape" &&  modalWindow) {
-     modalWindow.close();
-    document.removeEventListener("keydown", escapePressed);
+  if (event.code === "Escape" && modalWindow) {
+    modalWindow.close();
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
